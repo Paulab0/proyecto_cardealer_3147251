@@ -10,23 +10,40 @@ export class BrandsService {
   private prisma: PrismaService
  ){}
 
-  create(createBrandDto: CreateBrandDto) {
-    return 'This action adds a new brand';
+  create(body: any) {
+    return this.prisma.brands.create({
+      data: body
+    })
   }
 
   findAll() {
-    return this.prisma.brands.findMany();
+    return this.prisma.brands.findMany({ 
+      orderBy: { name: 'asc' }
+    })
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} brand`;
+    return this.prisma.brands.findFirst({
+      where: { id: id }
+    })
+  
   }
 
-  update(id: number, updateBrandDto: UpdateBrandDto) {
-    return `This action updates a #${id} brand`;
+  async update(id: number,
+    body:any) { return await this.prisma.brands.update({
+      where: { id: id },
+      data: body
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} brand`;
+  async remove(id: number) {
+    await this.prisma.brands.delete({
+      where: { id: id }
+    })
+    return {
+      "exito" : true,
+      "mensaje" : "Eliminado correctamente",
+      "id" : id
+    };
   }
 }
